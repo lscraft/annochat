@@ -5,7 +5,8 @@ var contact = {};
 var chatlist = {};
 var curChat = "";
 var lastIndex = -1;
-function unlock() {
+//解锁
+function unlock() {  
   web3.eth.personal.unlockAccount(address, password, 600, function (err) {
     if (err) {
       alert("something wrong happened, please refresh the page and try to login again");
@@ -14,7 +15,7 @@ function unlock() {
     }
   });
 }
-
+//加载联系人列表
 function loadContactList() {
   ac.methods.getContactListSize().call({ from: address }, function (err, res) {
     if (!err) {
@@ -31,7 +32,7 @@ function loadContactList() {
     }
   });
 }
-
+//加载聊天数据
 function loadChatList(){
 	var len = chatlist[curChat].length;
 	for (i = 0; i < len; i++){
@@ -40,10 +41,12 @@ function loadChatList(){
 		newChat(info,sender);
 	}
 }
+//判断某个联系人是否有新消息提示
 function isNotifyNewInfo(text) {
   if (text.length < 5) return false;
   return (text.substring(text.length - 5) === '(new)');
 }
+//获取新消息后通知区块链更新
 function afterGetNewInfo(content, timestamp, addr, addr_recv) {
   ac.methods.AfterNewInfo().send({ from: address, gas: 3000000 }, function (error, transactionHash) {
     if (!error) {
@@ -87,6 +90,7 @@ function afterGetNewInfo(content, timestamp, addr, addr_recv) {
   });
 
 }
+//检查新消息
 function checkAndGetNewInfo() {
   ac.methods.getNewInfoSize().call({ from: address }, function (err, res) {
     if (!err && res != 0) {
@@ -101,6 +105,7 @@ function checkAndGetNewInfo() {
     }
   });
 }
+//解锁后登陆
 function loginUnlock()
 {
 	password = $('#password').val();
@@ -115,6 +120,7 @@ function loginUnlock()
     }
   });
 }
+//登陆，没有注册就要求输入一个用户名来注册
 function login() {
 	ac.methods.isUserExist(address).call({ from: address },function(error, isExist){
 		if (error){
@@ -147,7 +153,7 @@ function login() {
 		}
 	});
 }
-
+//加载旧消息
 function loadOldInfo() {
 	alert('here');
 	if (curChat == address) return;
@@ -165,6 +171,7 @@ function loadOldInfo() {
   });
 
 }
+//新的联系人
 function newContact(addr, cname = '') {
   if (addr === '' || addr === address) return;
   if (contact[addr] != undefined) return;
@@ -187,10 +194,12 @@ function newContact(addr, cname = '') {
   }
   chatlist[addr] = [];
 }
+//界面上显示新联系人
 function addContact(name, address) {
 	$('.contact-thread').append('<li class=\'contactItem\' id=' + address + '>' + name + '</li>');
 	$('#'+ address).bind('click',contactOnclick);
 }
+//新的聊天信息
 function newChat(str, addr) {
   if (addr === address) {
     addChat(str, true);
@@ -198,6 +207,7 @@ function newChat(str, addr) {
     addChat(str, false);
   }
 }
+//界面上显示聊天消息
 function addChat(str, isSelf) {
   if (isSelf) {
     $('.chat-thread').append('<li id=\'self\'>' + str + '</li>');
@@ -206,7 +216,7 @@ function addChat(str, isSelf) {
     $('.chat-thread').append('<li id=\'other\'>' + str + '</li>');
   }
 }
-
+//界面上显示聊天消息，插入旧消息用
 function newChatfront(str, addr) {
   if (addr === address) {
     addChatfront(str, true);
@@ -241,6 +251,8 @@ function addOnclick()
   var addr = prompt("input address", "");
   newContact(addr);
 }
+
+//发送消息
 function sendInfo() {
   var info = $('#typeArea').val();
   if (info === '') {
