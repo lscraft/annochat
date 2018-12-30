@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+	<meta charset="UTF-8">
+
+	<title>AnnoChat</title>
+	
+	<link rel="stylesheet" href="style.css" media="screen" type="text/css" />
+	<script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.35/dist/web3.min.js"></script>
+	<script src='https://cdn.bootcss.com/jquery/3.3.1/jquery.js'></script>
+	<script src="setting.js"></script>
+	<script src='annochat.js'></script>
+
+</head>
+
+<body>
+	<aside>
+		<div class='loginBox'>
+					<form>
+						Eth address:<br>
+						<input type="text" name="address" id='address'>
+						<br>
+						Password:<br>
+						<input type="password" name="password" id='password'>
+					</form>
+					<button id="loginBtn" onclick="loginUnlock()">login</button>
+		</div>
+		<div class='contactBox'>
+			<ul class="contact-thread">
+			</ul>
+			<button id="addContact" onclick='addOnclick()'>Add</button>
+		</div>
+	</aside>
+
+
+
+
+	<div class="chatBox">
+		<div id="loadLastMessage" onclick='loadOldInfo()'>loadLastMessage</div>
+		<ul class="chat-thread">
+		</ul>
+		<div class='typeBox'>
+			<textarea id='typeArea'></textarea>
+			<p id="sendState"></p>
+			<button id="sendBtn" onclick="sendInfo()">Send</button>
+		</div>
+	</div>
+
+</body>
+
+</html>
